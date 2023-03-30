@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+  exert-dragonfly-server:
+    image: docker.dragonflydb.io/dragonflydb/dragonfly
+    container_name: exert-dragonfly-server
+    restart: always
+    ports:
+      - '46379:6379'
+    volumes:
+      - './docker/data:/data'
+    command: >
+      dragonfly
+      --logtostderr
+      --bind 0.0.0.0 --port 6379 
+      --cache_mode=true
+      --maxmemory=4gb
+      --keys_output_limit=12288
+      --dbfilename dump.rdb
+    # command: >
+    #   dragonfly --logtostderr --bind 0.0.0.0 --port 6379 
+    #   --requirepass=youshallnotpass --cache_mode=true
+    #   --maxmemory=4gb --keys_output_limit=12288 --dbfilename dump.rdb
+    networks:
+      - exert-dragonfly-net
+
+networks:
+  exert-dragonfly-net:
+    name: exert-dragonfly-net
+    driver: bridge
